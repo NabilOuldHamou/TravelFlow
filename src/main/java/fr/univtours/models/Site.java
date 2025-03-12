@@ -1,13 +1,9 @@
 package fr.univtours.models;
 
-import lombok.*;
+public class Site extends Node {
 
-@NoArgsConstructor @AllArgsConstructor
-@Getter @Setter @ToString
-public class Site {
-
-    private SiteType type;
-    private double x, y;
-    private double score;
+    public Site(double x, double y, double score) {
+        super(x, y, score);
+    }
 
 }

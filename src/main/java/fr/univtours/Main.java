@@ -1,12 +1,16 @@
 package fr.univtours;
 
-import fr.univtours.models.Site;
-import fr.univtours.models.SiteType;
+import java.util.Arrays;
 
 public class Main {
 
     public static void main(String[] args) {
-        Site s = new Site(SiteType.HOTEL_START, 12, 13, 14);
+
+        Instance i = new Instance("ressources/instance1.txt");
+        System.out.println(i.toString());
+
+        for (double[] row : i.getDistances())
+            System.out.println(Arrays.toString(row));
     }
 
 }
