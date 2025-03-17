@@ -9,5 +9,6 @@ public abstract class Node {
     private double x;
     private double y;
     private double score;
+    
 
 }

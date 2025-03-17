@@ -26,6 +26,10 @@ public class Instance {
     private double[][] distances;
 
     private Node[] nodes;
+    
+    private Hotel First;
+    
+    private Hotel Last;
 
     public Instance(String filename) {
         try{
