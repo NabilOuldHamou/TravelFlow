@@ -8,11 +8,32 @@ import org.w3c.dom.Node;
 import fr.univtours.Instance;
 
 public class Solution {
+
+
+	public Solution(Instance instance) {
+		this.instance = instance;
+		//instanciation des routes
+		int i =0;
+		this.routes.add(new Route(0, instance.getFirst(), null, instance.getTravelDistances()[0]));
+		for(i = 1; i < instance.getNbrDays() - 1; i++){
+			this.routes.add(new Route(i,null, null, instance.getTravelDistances()[i]));
+		}
+		i++;
+		this.routes.add(new Route(i,null,  instance.getLast(), instance.getTravelDistances()[i]));
+
+		//Instanciation des Noeuds
+		for(int j = 0; j<instance.getNodes().length; j++){
+			this.nodes.add((Node) instance.getNodes() [j]);
+		}
+
+
+
+	}
+
+	private Instance instance ;
+	private List<Route> routes = new ArrayList<>();
 	
-	
-	private List<Route> routes;
-	
-	private List<Node> nodes;
+	private List<Node> nodes ;
 	
 	
 	/*
@@ -24,27 +45,29 @@ public class Solution {
 		
 		//Tant que l'hotel final n'a pas été atteint
 		int jours = 0;
-		Node N = Instance.getFirst();
+		Hotel HFirst = this.instance.getFirst();
+		
+
 		
 		
 		
-		
-		
-		while(jours < Instance.getNbrDays()) {
+		while(jours < this.instance.getNbrDays()) {
 			//Creation d'une route
 			double bestRatio = Double.MAX_VALUE; 
+
+			Route Route = this.routes.get(jours);
+			Node currentNode = (Node) Route.getFirstNode();
 			Node toGo = null;
-			Route Route = new Route();
-			this.routes.add(Route);
-			while(! (toGo instanceof Hotel)) {
-				double distance = Instance.getTravelDistances[jours];
-				List<Node> reachable = reachableSite(N);
+			while(currentNode != this.instance.getLast() && jours < this.routes.size()) {}
+			do {
+				double Parcouru = 0;
+				List<Node> reachable = reachableSite(toGo);
 				
 				for(int i = 0; i < reachable.size(); i++) {
 					//Vérifier que le node peut atteindre un hotel
 					Node test = reachable.get(i);
-					if( hotelInSight(test, distance)) {
-						double ratio = getRatio(N, test);
+					if( hotelInSight(test, Route.getDistance() - Parcouru - this.instance.getDistances() [currentNode.getId()] [test.getId()] )) {
+						double ratio = getRatio(currentNode, test);
 						if( bestRatio < ratio) {
 							toGo = test;
 							bestRatio = ratio;
@@ -55,12 +78,12 @@ public class Solution {
 				}
 				
 				if(toGo != null) {
-					distance -= Instance.getDistance()[N.getId()][toG.getId()];
+					Parcouru += this.instance.getDistances()[currentNode.getId()][toGo.getId()];
 					//Ajouter togo a la route
-					this.routes.add(toGo);
-					N=toGo;
+					Route.addLastNode(toGo);
+					currentNode=toGo;
 				}
-			}
+			}while(! (toGo instanceof Hotel));
 			
 			
 			jours++;
@@ -72,7 +95,7 @@ public class Solution {
 	
 	private double getRatio(Node n1, Node n2) {
 		// TODO Auto-generated method stub
-		double distance = Instance.getDistances()[n1.getId()][n2.getId];
+		double distance = Instance.getDistances()[n1.get][n2.getId];
 		
 		double score = n2.getScore();
 		
@@ -87,7 +110,7 @@ public class Solution {
 		for(Node Nhotel : nodes) {
 			
 			if(Nhotel instanceof Hotel) {
-				if( Instance.GetDistances()[Nhotel.getId()][N.getId()] < distanceRestante )
+				if( this.instance.getDistances()[Nhotel.getId()][N.getId()] < distance )
 					return true;
 			}
 		}

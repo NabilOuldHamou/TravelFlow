@@ -38,6 +38,7 @@ public class Instance {
             List<Node> tempSites = new ArrayList<>();
 
             int lineNbr = 1;
+            int nodeId = 0;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] split = line.split("\t");
@@ -59,19 +60,23 @@ public class Instance {
                     case 4:
                         tempSites.add(new Hotel(
                                 HotelType.START,
+                                nodeId,
                                 Double.parseDouble(split[0]),
                                 Double.parseDouble(split[1]),
                                 Double.parseDouble(split[2])
                         ));
+                        nodeId ++;
                         break;
 
                     case 5:
                         tempSites.add(new Hotel(
                                 HotelType.END,
+                                nodeId,
                                 Double.parseDouble(split[0]),
                                 Double.parseDouble(split[1]),
                                 Double.parseDouble(split[2])
                         ));
+                        nodeId ++;
                         break;
 
                     default:
@@ -79,17 +84,20 @@ public class Instance {
                             if (split[2].equals("0")) {
                                 tempSites.add(new Hotel(
                                         HotelType.INTERMEDIATE,
+                                        nodeId,
                                         Double.parseDouble(split[0]),
                                         Double.parseDouble(split[1]),
                                         Double.parseDouble(split[2])
                                 ));
                             } else {
                                 tempSites.add(new Site(
+                                        nodeId,
                                         Double.parseDouble(split[0]),
                                         Double.parseDouble(split[1]),
                                         Double.parseDouble(split[2])
                                 ));
                             }
+                            nodeId ++;
                         }
                         break;
                 }
