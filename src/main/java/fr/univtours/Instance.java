@@ -108,7 +108,7 @@ public class Instance {
             tempSites.toArray(nodes);
             for(int i = 0; i < nbrSites; i++){
                 for(int j = 0; j < nbrSites; j++){
-                    distances[i][j] = Math.sqrt(Math.pow(nodes[i].getX() - nodes[j].getX(), 2) + Math.pow(nodes[i].getY() - nodes[j].getY(), 2));
+                    distances[i][j] = Math.sqrt(Math.pow(nodes[i].getX() - nodes[j].getY(), 2) + Math.pow(nodes[i].getY() - nodes[j].getY(), 2));
                 }
             }
 

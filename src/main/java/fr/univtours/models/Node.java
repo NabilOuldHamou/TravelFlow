@@ -12,6 +12,8 @@ public abstract class Node {
     private double score;
     private Node Next;
     private Node Prev;
-    
 
+    public int getId() {
+        return this.id;
+    }
 }

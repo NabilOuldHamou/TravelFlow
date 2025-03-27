@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+
 @Getter @Setter @ToString
 public class Route {
 	
@@ -20,21 +22,24 @@ public class Route {
 	
 	private int Score;
 
+	private ArrayList<Site> sites;
+
 	public Route(int routeId, Hotel firstNode, Hotel lastNode,  double distance) {
 		this.routeId = routeId;
 		this.firstNode = firstNode;
-		this.LastNode = lastNode;
+		LastNode = lastNode;
+		this.sites = new ArrayList<>();
 		this.nbSiteVisite = 0;
 		this.distance = distance;
 		this.parcouru = 0;
 		this.Score =0;
 	}
 
-	public void addLastNode(Site lastNode) {
-
-
-
+	public void addSite(Site site) {
+		this.sites.add(site);
 	}
+
+
 
 
 
