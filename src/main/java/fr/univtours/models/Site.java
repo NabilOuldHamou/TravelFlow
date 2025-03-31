@@ -7,7 +7,7 @@ import lombok.Setter;
 public class Site extends Node {
 
 	
-	private int routeId;
+	private int routeId = -1;
 	
     public Site(int id, double x, double y, double score) {
         super(id, x, y, score, null, null);

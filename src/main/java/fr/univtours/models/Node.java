@@ -13,7 +13,5 @@ public abstract class Node {
     private Node Next;
     private Node Prev;
 
-    public int getId() {
-        return this.id;
-    }
+
 }

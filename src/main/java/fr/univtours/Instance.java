@@ -58,25 +58,29 @@ public class Instance {
                         }
                         break;
                     case 4:
-                        tempSites.add(new Hotel(
+                        Hotel HFirst = new Hotel(
                                 HotelType.START,
                                 nodeId,
                                 Double.parseDouble(split[0]),
                                 Double.parseDouble(split[1]),
                                 Double.parseDouble(split[2])
-                        ));
+                        );
+                        tempSites.add(HFirst);
                         nodeId ++;
+                        this.First = HFirst;
                         break;
 
                     case 5:
-                        tempSites.add(new Hotel(
+                        Hotel HEnd = new Hotel(
                                 HotelType.END,
                                 nodeId,
                                 Double.parseDouble(split[0]),
                                 Double.parseDouble(split[1]),
                                 Double.parseDouble(split[2])
-                        ));
+                        );
+                        tempSites.add(HEnd);
                         nodeId ++;
+                        this.Last = HEnd;
                         break;
 
                     default:
