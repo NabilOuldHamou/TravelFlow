@@ -49,7 +49,6 @@ public class Instance {
                         nbrMidHotels = Integer.parseInt(split[1]);
                         nbrDays = Integer.parseInt(split[2]);
                         travelDistances = new double[nbrDays];
-                        distances = new double[nbrSites][nbrSites];
                         break;
                     case 2:
                         for (int i = 0; i < nbrDays; i++) {
@@ -110,6 +109,7 @@ public class Instance {
 
             nodes = new Node[tempSites.size()];
             tempSites.toArray(nodes);
+            distances = new double[tempSites.size()][tempSites.size()];
             for(int i = 0; i < tempSites.size(); i++){
                 for(int j = 0; j < tempSites.size(); j++){
                     distances[i][j] = Math.sqrt(Math.pow(nodes[i].getX() - nodes[j].getY(), 2) + Math.pow(nodes[i].getY() - nodes[j].getY(), 2));
