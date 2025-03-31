@@ -5,5 +5,5 @@ import fr.univtours.Instance;
 public interface MethodStrategy {
 
     void saveResults();
-    void solve();
+    void solve(Instance instance);
 }

@@ -23,7 +23,8 @@ public class Main {
                 }
             }
 
-            new InstanceStarter(method[1], files);
+            InstanceStarter is = new InstanceStarter(method[1], files);
+            is.solve();
         }
     }
 

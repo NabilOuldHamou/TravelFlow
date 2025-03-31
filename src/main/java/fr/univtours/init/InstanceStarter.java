@@ -29,7 +29,7 @@ public class InstanceStarter {
 
     public void solve() {
         for (Instance instance : this.instances) {
-            method.solve();
+            method.solve(instance);
         }
     }
 
