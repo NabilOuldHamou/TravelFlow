@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) {
         if (args.length > 0) {
             String[] method = args[0].split("=");
