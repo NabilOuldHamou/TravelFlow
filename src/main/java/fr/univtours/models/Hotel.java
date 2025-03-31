@@ -9,8 +9,8 @@ public class Hotel extends Node {
 
     private HotelType hotelType;
 
-    public Hotel(HotelType hotelType, double x, double y, double score) {
-        super(x, y, score);
+    public Hotel(HotelType hotelType, int id, double x, double y, double score) {
+        super(id, x, y, score, null, null);
         this.hotelType = hotelType;
     }
 }

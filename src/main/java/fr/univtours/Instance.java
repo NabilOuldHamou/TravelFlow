@@ -26,6 +26,10 @@ public class Instance {
     private double[][] distances;
 
     private Node[] nodes;
+    
+    private Hotel First;
+    
+    private Hotel Last;
 
     public Instance(String filename) {
         try{
@@ -34,6 +38,7 @@ public class Instance {
             List<Node> tempSites = new ArrayList<>();
 
             int lineNbr = 1;
+            int nodeId = 0;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] split = line.split("\t");
@@ -53,21 +58,29 @@ public class Instance {
                         }
                         break;
                     case 4:
-                        tempSites.add(new Hotel(
+                        Hotel HFirst = new Hotel(
                                 HotelType.START,
+                                nodeId,
                                 Double.parseDouble(split[0]),
                                 Double.parseDouble(split[1]),
                                 Double.parseDouble(split[2])
-                        ));
+                        );
+                        tempSites.add(HFirst);
+                        nodeId ++;
+                        this.First = HFirst;
                         break;
 
                     case 5:
-                        tempSites.add(new Hotel(
+                        Hotel HEnd = new Hotel(
                                 HotelType.END,
+                                nodeId,
                                 Double.parseDouble(split[0]),
                                 Double.parseDouble(split[1]),
                                 Double.parseDouble(split[2])
-                        ));
+                        );
+                        tempSites.add(HEnd);
+                        nodeId ++;
+                        this.Last = HEnd;
                         break;
 
                     default:
@@ -75,17 +88,20 @@ public class Instance {
                             if (split[2].equals("0")) {
                                 tempSites.add(new Hotel(
                                         HotelType.INTERMEDIATE,
+                                        nodeId,
                                         Double.parseDouble(split[0]),
                                         Double.parseDouble(split[1]),
                                         Double.parseDouble(split[2])
                                 ));
                             } else {
                                 tempSites.add(new Site(
+                                        nodeId,
                                         Double.parseDouble(split[0]),
                                         Double.parseDouble(split[1]),
                                         Double.parseDouble(split[2])
                                 ));
                             }
+                            nodeId ++;
                         }
                         break;
                 }
@@ -96,7 +112,7 @@ public class Instance {
             tempSites.toArray(nodes);
             for(int i = 0; i < nbrSites; i++){
                 for(int j = 0; j < nbrSites; j++){
-                    distances[i][j] = Math.sqrt(Math.pow(nodes[i].getX() - nodes[j].getX(), 2) + Math.pow(nodes[i].getY() - nodes[j].getY(), 2));
+                    distances[i][j] = Math.sqrt(Math.pow(nodes[i].getX() - nodes[j].getY(), 2) + Math.pow(nodes[i].getY() - nodes[j].getY(), 2));
                 }
             }
 
