@@ -1,9 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'fr.univtours'
 version = '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'fr.univtours.Main' // Remplacez par votre classe principale
+}
 
 repositories {
     mavenCentral()
