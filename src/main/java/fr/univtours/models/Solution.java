@@ -311,28 +311,46 @@ public class Solution {
 	}
 
 	public boolean checkRoute(Route route) {
+		boolean check = true;
+
 		if(route.getFirstNode() == null || route.getLastNode() == null) {
 			System.out.println("Hotel not set");
-			return false;
+			check = false;
+		}else{
+			Node currentNode = route.getFirstNode();
+			double distance = 0;
+			for(Site site : route.getSites()) {
+				distance += this.instance.getDistances()[currentNode.getId()][site.getId()];
+				currentNode = site;
+			}
+			distance += this.instance.getDistances()[currentNode.getId()][route.getLastNode().getId()];
+
+			if(distance != route.getParcouru()) {
+				System.out.println("Distance is not equal to the sum of the real distance");
+				check = false;
+			}
+
+			if(route.getParcouru() > route.getDistance()) {
+				System.out.println("Distance parcouru is greater than distance");
+				check = false;
+			}
 		}
 		if(route.getNbSiteVisite() == 0) {
 			System.out.println("No site visited");
-			return false;
+			check = false;
 		}
-		if(route.getParcouru() > route.getDistance()) {
-			System.out.println("Distance parcouru is greater than distance");
-			return false;
-		}
+
+
 		int value = 0;
 		for(Site site : route.getSites()) {
 			value+= site.getScore();
 		}
 		if(value != route.getScore()) {
 			System.out.println("Score is not equal to the sum of the sites");
-			return false;
+			check = false;
 		}
 
-		return true;
+		return check;
 	}
 
 }
