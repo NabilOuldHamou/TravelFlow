@@ -28,8 +28,12 @@ public class InstanceStarter {
     }
 
     public void solve() {
+        int i = 1;
         for (Instance instance : this.instances) {
+            System.out.println("Solving instance " + i + " / " + this.instances.size());
             method.solve(instance);
+            i++;
+            System.out.println("Done");
         }
     }
 

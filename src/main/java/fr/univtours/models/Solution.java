@@ -43,37 +43,63 @@ public class Solution {
 	}
 
 
-	/*
-	 * Fontion k plus grand ratio:
-	 *  Evalue le ratio sur la valeur / distance
-	 *
-	 */
+	ArrayList<Hotel> hotels = new ArrayList<>();
+
 	public void kpgr() {
-
-		//Tant que l'hotel final n'a pas été atteint
 		int jours = 0;
+		Route route = this.routes.get(jours);
 
-		Route Route = this.routes.get(jours);
-		while(jours < this.routes.size() ) {
+		while (jours < this.routes.size()) {
+			Node currentNode = (Node) route.getFirstNode();
+			Node toGo = currentNode;
+			double parcouru = 0;
 
-
-
-
-			Node currentNode = (Node) Route.getFirstNode();
-			Node toGo = null;
-			//while(currentNode != this.instance.getLast() && jours < this.routes.size()) {}
-
-			double Parcouru = 0;
 			do {
-				double bestRatio = -1;
-				List<Node> reachable = reachableSite(currentNode, Route.getDistance() - Parcouru);
+				double bestRatio = 0;
+				List<Node> reachable = reachableSite(currentNode, route.getDistance() - parcouru);
+				int min = -1;
+				this.hotels.clear();
 
-				for(int i = 0; i < reachable.size(); i++) {
-					//Vérifier que le node peut atteindre un hotel
+				for (int i = 0; i < reachable.size(); i++) {
 					Node test = reachable.get(i);
-					if(Route.getLastNode() == null) {
-						if (hotelInSight(test,
-								Route.getDistance() - Parcouru - this.instance.getDistances()[currentNode.getId()][test.getId()])
+					if (test instanceof Hotel ) {
+						Hotel hotel = (Hotel) test;
+						if (min == -1) {
+							this.hotels.add(hotel);
+							min = hotel.getNbVisit();
+						} else {
+							if (hotel.getNbVisit() < min) {
+								this.hotels.clear();
+								this.hotels.add(hotel);
+								min = hotel.getNbVisit();
+							} else if (hotel.getNbVisit() == min) {
+								this.hotels.add(hotel);
+							}
+						}
+					}else{
+						break;
+					}
+				}
+
+				for (int i = 0; i < reachable.size(); i++) {
+					Node test = reachable.get(i);
+					if (route.getLastNode() == null && test != currentNode) {
+						if (!visited(test)
+								&& LastHotelInSight(route.getDistance() - parcouru - this.instance.getDistances()[currentNode.getId()][test.getId()], test)
+								&& hotelInSight(test, route.getDistance() - parcouru - this.instance.getDistances()[currentNode.getId()][test.getId()])) {
+							double ratio = getRatio(currentNode, test);
+							if (this.hotels.contains(test) || currentNode == toGo) {
+								toGo = test;
+							} else {
+								if (bestRatio < ratio) {
+									toGo = test;
+									bestRatio = ratio;
+								}
+							}
+						}
+					} else {
+						// Dernière Route
+						if (LastHotelInSight(route.getDistance() - parcouru - this.instance.getDistances()[currentNode.getId()][test.getId()], test)
 								&& !visited(test)) {
 							double ratio = getRatio(currentNode, test);
 							if (bestRatio < ratio) {
@@ -81,66 +107,61 @@ public class Solution {
 								bestRatio = ratio;
 							}
 						}
-					}else{
-						//Dernière Route
-						if (LastHotelInSight(Route.getDistance()
-								- Parcouru
-								- this.instance.getDistances()[currentNode.getId()][test.getId()], test)
-								&& !visited(test)) {
-							double ratio = getRatio(currentNode, test);
-							if (bestRatio < ratio) {
-								toGo = test;
-								bestRatio = ratio;
-							}
-						}
-
 					}
-
-
 				}
 
-				if(toGo != null ) {
-					Parcouru += this.instance.getDistances()[currentNode.getId()][toGo.getId()];
-					if(toGo instanceof Hotel) {
-						Route.setLastNode((Hotel) toGo);
-						Route.setParcouru(Parcouru);
-					}else{
-						if(toGo instanceof Site) {
-							Site site = (Site) toGo;
-							site.setRouteId(Route.getRouteId());
-							Route.addSite(site);
-						}
-
+				if (toGo != null && toGo != currentNode) {
+					parcouru += this.instance.getDistances()[currentNode.getId()][toGo.getId()];
+					if (toGo instanceof Hotel) {
+						route.setLastNode((Hotel) toGo);
+						route.setParcouru(parcouru);
+					} else if (toGo instanceof Site) {
+						Site site = (Site) toGo;
+						site.setRouteId(route.getRouteId());
+						route.addSite(site);
 					}
-					currentNode=toGo;
-				}else{
-					//Gérer le cas où aucun site n'est atteignable
+					currentNode = toGo;
+				} else {
+					// Gérer le cas où aucun site n'est atteignable
+					break;
 				}
-			}while(! (toGo instanceof Hotel));
-
+			} while (!(toGo instanceof Hotel));
 
 			jours++;
-			if(jours < this.routes.size()) {
-				Route = this.routes.get(jours);
-				Route.setFirstNode((Hotel) toGo);
+			if (jours < this.routes.size()) {
+				route = this.routes.get(jours);
+				route.setFirstNode((Hotel) toGo);
 			}
-
 		}
-
-
-
-
+		//linkSite();
 	}
 
 	private boolean LastHotelInSight(double dist , Node test) {
-		if(test instanceof Hotel && ((Hotel) test).getHotelType() != HotelType.END)
-			return false;
+		if(test instanceof Hotel) {
+			if(((Hotel) test).getHotelType() == HotelType.END) {
+				return true;
+			}
+			double sumDist = 0;
+			double distToEnd= this.instance.getDistances()[this.instance.getLast().getId()][test.getId()];
+			for(Route r : this.routes) {
+
+				if(r.getFirstNode() == null ) {
+					sumDist += r.getDistance();
+				}
+
+
+
+			}
+			return sumDist >= this.instance.getDistances()[this.instance.getLast().getId()][test.getId()];
+		}
 		return dist >= this.instance.getDistances()[this.instance.getLast().getId()][test.getId()];
 	}
 
+
+
 	private boolean visited(Node test) {
-		if ((test instanceof Site) && (((Site) test).getRouteId() >= 0)) {
-			return true;
+		if ((test instanceof Site) ) {
+			return ((Site) test).getRouteId() >= 0;
 		}
 		return false;
 	}
@@ -157,7 +178,7 @@ public class Solution {
 
 
 	/*
-	 * Vérifie que le site peut rejoindre un hotel
+	 * Vérifie que le site peut rejoindre un hotel pas visitée
 	 */
 	public boolean hotelInSight(Node N, double distance) {
 		if(N instanceof Hotel) {
@@ -165,7 +186,7 @@ public class Solution {
 		}else{
 			for(Node Nhotel : Snodes) {
 
-				if(Nhotel instanceof Hotel) {
+				if(this.hotels.contains(Nhotel)) {
 					if( this.instance.getDistances()[Nhotel.getId()][N.getId()] < distance )
 						return true;
 				}
@@ -194,13 +215,7 @@ public class Solution {
 	}
 
 
-	/*
-	 * Vérifie que l'ont peut atteindre la hotel final a partir de l'hotel actuel
-	 */
-	public boolean routeValidator(int routeID) {
-		return true;
-		//return this.instance.getDistances()[routes.get(routeID).getLast().getID][instance.getLast().getId()] < DistTotalRestante;
-	}
+
 
 	//Print les routes
 	public void printRoutes() {
@@ -244,6 +259,80 @@ public class Solution {
 		}
 
 		return hotelScores;
+	}
+
+	public void checkSolution(){
+		boolean check = true;
+		for(Route route : routes) {
+			if(!checkRoute(route)) {
+				System.out.println("Route " + route.getRouteId() + " is not valid");
+				check = false;
+			}
+		}
+		if(!checkSite()) {
+			System.out.println("Some sites are not valid");
+			check = false;
+		}
+		if(!check) {
+			System.out.println("Some routes are not valid");
+			return;
+		}
+		System.out.println("All routes are valid");
+
+	}
+
+	public void linkSite(){
+		for(Route route : routes) {
+			for(int i=0; i < route.getSites().size() ; i++){
+				Site site = route.getSites().get(i);
+				if( i-1 >= 0) {
+					site.setPrev(route.getSites().get(i - 1));
+				}
+				if( i+1 < route.getSites().size()) {
+					site.setNext(route.getSites().get(i + 1));
+				}
+			}
+		}
+	}
+
+	public boolean checkSite(){
+		for(Node node : Snodes) {
+			if(node instanceof Site) {
+				int routeId = ((Site) node).getRouteId();
+				if (routeId != -1) {
+					if(! this.routes.get(routeId).getSites().contains(node)) {
+						System.out.println("Site " + node.getId() + " is not in the right route");
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	public boolean checkRoute(Route route) {
+		if(route.getFirstNode() == null || route.getLastNode() == null) {
+			System.out.println("Hotel not set");
+			return false;
+		}
+		if(route.getNbSiteVisite() == 0) {
+			System.out.println("No site visited");
+			return false;
+		}
+		if(route.getParcouru() > route.getDistance()) {
+			System.out.println("Distance parcouru is greater than distance");
+			return false;
+		}
+		int value = 0;
+		for(Site site : route.getSites()) {
+			value+= site.getScore();
+		}
+		if(value != route.getScore()) {
+			System.out.println("Score is not equal to the sum of the sites");
+			return false;
+		}
+
+		return true;
 	}
 
 }

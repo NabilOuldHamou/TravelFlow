@@ -36,6 +36,7 @@ public class Route {
 	}
 
 	public void addSite(Site site) {
+		site.setRouteId(this.routeId);
 		this.sites.add(site);
 		this.nbSiteVisite++;
 		this.Score += site.getScore();

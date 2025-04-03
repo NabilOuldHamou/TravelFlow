@@ -14,6 +14,8 @@ public class KPGRStrategy implements MethodStrategy {
     public void solve(Instance instance) {
         Solution s = new Solution(instance);
         s.kpgr();
+        //s.linkSite(); Méthode à corriger
+        s.checkSolution();
         s.printRoutes();
     }
 }
