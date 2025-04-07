@@ -1,7 +1,7 @@
 package fr.univtours.init.strategies;
 
 import fr.univtours.Instance;
-import fr.univtours.models.Solution;
+import fr.univtours.models.solutions.Solution;
 
 public class KPGRStrategy implements MethodStrategy {
 

@@ -25,7 +25,8 @@ public class Instance {
 
     private double[][] distances;
 
-    private Node[] nodes;
+    public Node[] nodes;
+    public static Node[] staticNodes;
     
     private Hotel First;
     
@@ -108,7 +109,9 @@ public class Instance {
             }
 
             nodes = new Node[tempSites.size()];
+            staticNodes = new Node[tempSites.size()];
             tempSites.toArray(nodes);
+            tempSites.toArray(staticNodes);
             distances = new double[tempSites.size()][tempSites.size()];
             for(int i = 0; i < tempSites.size(); i++){
                 for(int j = 0; j < tempSites.size(); j++){
@@ -119,6 +122,10 @@ public class Instance {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public double getDistanceBetween(Node nodeA, Node nodeB) {
+        return distances[nodeA.getId()][nodeB.getId()];
     }
 
     @Override

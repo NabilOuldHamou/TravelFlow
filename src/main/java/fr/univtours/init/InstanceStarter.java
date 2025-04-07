@@ -1,6 +1,7 @@
 package fr.univtours.init;
 
 import fr.univtours.Instance;
+import fr.univtours.init.strategies.GreedyStrategy;
 import fr.univtours.init.strategies.KPGRStrategy;
 import fr.univtours.init.strategies.MethodStrategy;
 import lombok.Getter;
@@ -24,6 +25,10 @@ public class InstanceStarter {
         switch (method) {
             case "kpgr":
                 this.method = new KPGRStrategy();
+                break;
+            case "greedy":
+                this.method = new GreedyStrategy();
+                break;
         }
     }
 

@@ -1,14 +1,11 @@
-package fr.univtours.models;
+package fr.univtours.models.solutions;
 
 import java.util.ArrayList;
 import java.util.List;
-import fr.univtours.models.Hotel;
-import fr.univtours.models.HotelType;
-import fr.univtours.models.Node;
-import fr.univtours.models.Site;
+
+import fr.univtours.models.*;
 import fr.univtours.utils.Pair;
 import lombok.Getter;
-import lombok.Setter;
 
 import fr.univtours.Instance;
 import lombok.ToString;
@@ -126,10 +123,6 @@ public class Solution {
 			}
 
 		}
-
-
-
-
 	}
 
 	private boolean LastHotelInSight(double dist , Node test) {
@@ -210,40 +203,6 @@ public class Solution {
 			score += route.getScore();
 		}
 		System.out.println("Score: " + score);
-	}
-
-	public List<Pair<Hotel, Double>> hotelScores(double rayon) {
-		List<Pair<Hotel, Double>> hotelScores = new ArrayList<>();
-		List<Site> sites = new ArrayList<>();
-		List<Hotel> intermediateHotels = new ArrayList<>();
-		Snodes.forEach(n -> {
-			if (n instanceof Hotel && ((Hotel) n).getHotelType().equals(HotelType.INTERMEDIATE)) {
-				intermediateHotels.add((Hotel) n);
-			} else if (n instanceof Site) {
-				sites.add((Site) n);
-			}
-		});
-
-		for (Hotel hotel : intermediateHotels) {
-			List<Site> possibleSites = new ArrayList<>();
-			double sumDistance = 0;
-			for (Site site : sites) {
-				// TODO refaire avec les identifiants
-				double distance = Math.sqrt(Math.pow(hotel.getX() - site.getX(), 2) + Math.pow(hotel.getY() - site.getY(), 2));
-				sumDistance += distance;
-
-				if (distance <= rayon) {
-					possibleSites.add(site);
-				}
-			}
-
-			double sumScore = possibleSites.stream().mapToDouble(Site::getScore).sum();
-			double ratio = (sumScore / sumDistance) * 100;
-
-			hotelScores.add(new Pair<>(hotel, ratio / possibleSites.size()));
-		}
-
-		return hotelScores;
 	}
 
 }
