@@ -4,6 +4,7 @@ import fr.univtours.models.Hotel;
 import fr.univtours.models.HotelType;
 import fr.univtours.models.Node;
 import fr.univtours.models.Site;
+import fr.univtours.utils.Pair;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,11 +26,9 @@ public class Instance {
 
     private double[][] distances;
 
-    public Node[] nodes;
-    public static Node[] staticNodes;
+    private Node[] nodes;
     
     private Hotel First;
-    
     private Hotel Last;
 
     public Instance(String filename) {
@@ -109,15 +108,14 @@ public class Instance {
             }
 
             nodes = new Node[tempSites.size()];
-            staticNodes = new Node[tempSites.size()];
             tempSites.toArray(nodes);
-            tempSites.toArray(staticNodes);
             distances = new double[tempSites.size()][tempSites.size()];
             for(int i = 0; i < tempSites.size(); i++){
                 for(int j = 0; j < tempSites.size(); j++){
                     distances[i][j] = Math.sqrt(Math.pow(nodes[i].getX() - nodes[j].getY(), 2) + Math.pow(nodes[i].getY() - nodes[j].getY(), 2));
                 }
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
