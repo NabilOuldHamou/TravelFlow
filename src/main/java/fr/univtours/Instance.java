@@ -9,10 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 @Getter @Setter
 public class Instance {
@@ -116,11 +113,27 @@ public class Instance {
                 }
             }
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public Hotel getClosestHotel(Node from) {
+        return Arrays.stream(nodes)
+                .filter(node -> node instanceof Hotel)
+                .map(node -> (Hotel) node)
+                .min(Comparator.comparingDouble(hotel -> getDistanceBetween(from, hotel)))
+                .orElse(null);
+    }
+
+    public Site getClosestSite(Node from) {
+        return Arrays.stream(nodes)
+                .filter(node -> node instanceof Site)
+                .map(node -> (Site) node)
+                .min(Comparator.comparingDouble(site -> getDistanceBetween(from, site)))
+                .orElse(null);
+    }
+
 
     public double getDistanceBetween(Node nodeA, Node nodeB) {
         return distances[nodeA.getId()][nodeB.getId()];

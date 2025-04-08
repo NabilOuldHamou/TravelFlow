@@ -85,6 +85,45 @@ public class GeneticAlgorithm {
         individuals.addAll(temp);
     }
 
+    public void fixChromosome(List<Integer> chromosome) {
+        // Réparation premier hôtel
+        if (chromosome.getFirst() != instance.getFirst().getId()) {
+            chromosome.addFirst(instance.getFirst().getId());
+        }
+
+        // Réparation dernier hôtel
+        if (chromosome.getLast() != instance.getLast().getId()) {
+            chromosome.addLast(instance.getLast().getId());
+        }
+
+        // Vérif duplicité des sites
+        Set<Site> seen = new HashSet<>();
+        List<Integer> cleanedChromosome = chromosome.stream()
+                .filter(c -> {
+                    Node node = instance.getNodes()[c];
+                    if (node instanceof Site site) {
+                        return seen.add(site);
+                    }
+                    return true;
+                })
+                .toList();
+
+        chromosome.clear();
+        chromosome.addAll(cleanedChromosome);
+
+
+        // Vérif distance
+        List<Hotel> hotels = Arrays.stream(instance.getNodes())
+                .filter(n -> n instanceof Hotel)
+                .map(Hotel.class::cast)
+                .toList();
+
+        List<Integer> hotelIds = chromosome.stream()
+                .filter(id -> hotels.stream().anyMatch(h -> h.getId() == id))
+                .toList();
+
+    }
+
     public List<Integer> crossover(Individual parent1, Individual parent2) {
         // Chopper les chromosomes et faire le crossover
         List<Integer> childChromosome = new ArrayList<>();

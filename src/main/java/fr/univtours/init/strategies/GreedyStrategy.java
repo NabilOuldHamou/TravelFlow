@@ -18,8 +18,13 @@ public class GreedyStrategy implements MethodStrategy {
     @Override
     public void saveResults(long elapsedTime, String filename, SolutionResult result) {
 
-        String path = "results/" + filename.split("\\\\")[1];
+        String path = "results/" + filename.split("/")[1];
         File file = new File(path);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write("Instance: " + filename);
             writer.newLine();
@@ -27,8 +32,8 @@ public class GreedyStrategy implements MethodStrategy {
             writer.newLine();
             for (Route r : result.routes()) {
                 writer.write(r.toString());
+                writer.newLine();
             }
-            writer.newLine();
             writer.write("Score: " + result.score());
             writer.newLine();
             writer.write("Time: " + elapsedTime + "ms");
@@ -48,7 +53,7 @@ public class GreedyStrategy implements MethodStrategy {
             sr.forEach(n -> {
                 optimized.add(rs.optimizeSolution(n));
             });
-            GeneticAlgorithm ga = new GeneticAlgorithm(optimized, instance, 500, 1000, 0.3f, 0.3f, 0.5f);
+            GeneticAlgorithm ga = new GeneticAlgorithm(optimized, instance, 500, 500, 0.3f, 0.3f, 0.5f);
             var routes =  ga.train();
 
             return new SolutionResult(routes, routes.stream().mapToDouble(Route::getScore).sum());
