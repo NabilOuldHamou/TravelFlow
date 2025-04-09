@@ -21,10 +21,14 @@ public class Main {
                 for (File file : folder.listFiles()) {
                     files.add(file.getPath());
                 }
+                files.sort(String::compareTo);
             }
 
+            long startTime = System.currentTimeMillis();
             InstanceStarter is = new InstanceStarter(method[1], files);
             is.solve();
+            long endTime = System.currentTimeMillis();
+            System.out.println("\nTotal time: " + (endTime - startTime) + "ms");
         }
     }
 

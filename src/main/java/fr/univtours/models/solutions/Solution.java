@@ -1,17 +1,14 @@
-package fr.univtours.models;
+package fr.univtours.models.solutions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.univtours.models.Hotel;
-import fr.univtours.models.HotelType;
-import fr.univtours.models.Node;
-import fr.univtours.models.Site;
+
+import fr.univtours.models.*;
 import fr.univtours.utils.Pair;
 import lombok.Getter;
-import lombok.Setter;
 
 import fr.univtours.Instance;
 import lombok.ToString;

@@ -4,14 +4,12 @@ import fr.univtours.models.Hotel;
 import fr.univtours.models.HotelType;
 import fr.univtours.models.Node;
 import fr.univtours.models.Site;
+import fr.univtours.utils.Pair;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 @Getter @Setter
 public class Instance {
@@ -28,7 +26,6 @@ public class Instance {
     private Node[] nodes;
     
     private Hotel First;
-    
     private Hotel Last;
 
     public Instance(String filename) {
@@ -119,6 +116,56 @@ public class Instance {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Hotel getClosestHotel(int from) {
+        return Arrays.stream(nodes)
+                .filter(node -> node instanceof Hotel)
+                .map(node -> (Hotel) node)
+                .min(Comparator.comparingDouble(hotel -> distances[from][hotel.getId()]))
+                .orElse(null);
+    }
+
+    public Site getClosestSite(int from) {
+        return Arrays.stream(nodes)
+                .filter(node -> node instanceof Site)
+                .map(node -> (Site) node)
+                .min(Comparator.comparingDouble(site -> distances[from][site.getId()]))
+                .orElse(null);
+    }
+
+    public List<Site> getAllSites() {
+        return Arrays.stream(nodes)
+                .filter(n -> n instanceof Site)
+                .map(Site.class::cast)
+                .toList();
+    }
+
+    public List<Hotel> getAllHotels() {
+        return Arrays.stream(nodes)
+                .filter(n -> n instanceof Hotel)
+                .map(Hotel.class::cast)
+                .toList();
+    }
+
+    public double getDistanceBetween(List<Integer> nodeIds) {
+        double totalDistance = 0.d;
+        for (int i = 0; i < nodeIds.size() - 1; i++) {
+            int start = nodeIds.get(i);
+            int end = nodeIds.get(i + 1);
+
+            totalDistance += distances[start][end];
+        }
+
+        return totalDistance;
+    }
+
+    public double getDistanceBetween(Node nodeA, Node nodeB) {
+        return distances[nodeA.getId()][nodeB.getId()];
+    }
+
+    public double getDistanceBetween(int nodeA, int nodeB) {
+        return distances[nodeA][nodeB];
     }
 
     @Override
