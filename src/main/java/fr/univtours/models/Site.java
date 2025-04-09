@@ -1,13 +1,16 @@
 package fr.univtours.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@NoArgsConstructor @AllArgsConstructor
-@Getter @Setter @ToString
-public class Site {
+@Getter @Setter
+public class Site extends Node {
 
-    private SiteType type;
-    private double x, y;
-    private double score;
+	
+	private int routeId = -1;
+	
+    public Site(int id, double x, double y, double score) {
+        super(id, x, y, score, null, null);
+    }
 
 }
