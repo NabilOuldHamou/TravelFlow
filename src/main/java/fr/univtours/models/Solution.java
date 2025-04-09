@@ -1,7 +1,10 @@
 package fr.univtours.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import fr.univtours.models.Hotel;
 import fr.univtours.models.HotelType;
 import fr.univtours.models.Node;
@@ -59,31 +62,34 @@ public class Solution {
 				List<Node> reachable = reachableSite(currentNode, route.getDistance() - parcouru);
 				int min = -1;
 				this.hotels.clear();
-
-				for (int i = 0; i < reachable.size(); i++) {
-					Node test = reachable.get(i);
-					if (test instanceof Hotel ) {
-						Hotel hotel = (Hotel) test;
-						if (min == -1) {
-							this.hotels.add(hotel);
-							min = hotel.getNbVisit();
-						} else {
-							if (hotel.getNbVisit() < min) {
-								this.hotels.clear();
+				if (route.getLastNode() != null) {
+					this.hotels.add(this.instance.getLast());
+				}else{
+					for (int i = 0; i < reachable.size(); i++) {
+						Node test = reachable.get(i);
+						if (test instanceof Hotel ) {
+							Hotel hotel = (Hotel) test;
+							if (min == -1) {
 								this.hotels.add(hotel);
 								min = hotel.getNbVisit();
-							} else if (hotel.getNbVisit() == min) {
-								this.hotels.add(hotel);
+							} else {
+								if (hotel.getNbVisit() < min) {
+									this.hotels.clear();
+									this.hotels.add(hotel);
+									min = hotel.getNbVisit();
+								} else if (hotel.getNbVisit() == min) {
+									this.hotels.add(hotel);
+								}
 							}
+						}else{
+							break;
 						}
-					}else{
-						break;
 					}
 				}
 
-				for (int i = 0; i < reachable.size(); i++) {
-					Node test = reachable.get(i);
-					if (route.getLastNode() == null && test != currentNode) {
+
+				for (Node test : reachable) {
+					if (/*route.getLastNode() == null &&*/ test != currentNode) {
 						if (!visited(test)
 								&& LastHotelInSight(route.getDistance() - parcouru - this.instance.getDistances()[currentNode.getId()][test.getId()], test)
 								&& hotelInSight(test, route.getDistance() - parcouru - this.instance.getDistances()[currentNode.getId()][test.getId()])) {
@@ -97,24 +103,16 @@ public class Solution {
 								}
 							}
 						}
-					} else {
-						// Dernière Route
-						if (LastHotelInSight(route.getDistance() - parcouru - this.instance.getDistances()[currentNode.getId()][test.getId()], test)
-								&& !visited(test)) {
-							double ratio = getRatio(currentNode, test);
-							if (bestRatio < ratio) {
-								toGo = test;
-								bestRatio = ratio;
-							}
-						}
 					}
 				}
 
 				if (toGo != null && toGo != currentNode) {
 					parcouru += this.instance.getDistances()[currentNode.getId()][toGo.getId()];
-					if (toGo instanceof Hotel) {
+					//System.out.println("Parcouru ap: add "+ toGo.getId() +" -> "+ parcouru +"/"+ route.getDistance());
+					if (toGo instanceof Hotel ) {
 						route.setLastNode((Hotel) toGo);
 						route.setParcouru(parcouru);
+						((Hotel) toGo).setNbVisit(((Hotel) toGo).getNbVisit() + 1);
 					} else if (toGo instanceof Site) {
 						Site site = (Site) toGo;
 						site.setRouteId(route.getRouteId());
@@ -137,24 +135,20 @@ public class Solution {
 	}
 
 	private boolean LastHotelInSight(double dist , Node test) {
+		double distToEnd= this.instance.getDistances()[test.getId()][this.instance.getLast().getId()];
 		if(test instanceof Hotel) {
 			if(((Hotel) test).getHotelType() == HotelType.END) {
 				return true;
 			}
-			double sumDist = 0;
-			double distToEnd= this.instance.getDistances()[this.instance.getLast().getId()][test.getId()];
+			double sumDist = dist;
 			for(Route r : this.routes) {
-
 				if(r.getFirstNode() == null ) {
 					sumDist += r.getDistance();
 				}
-
-
-
 			}
-			return sumDist >= this.instance.getDistances()[this.instance.getLast().getId()][test.getId()];
+			return sumDist >= distToEnd;
 		}
-		return dist >= this.instance.getDistances()[this.instance.getLast().getId()][test.getId()];
+		return dist >= distToEnd;
 	}
 
 
@@ -181,13 +175,13 @@ public class Solution {
 	 * Vérifie que le site peut rejoindre un hotel pas visitée
 	 */
 	public boolean hotelInSight(Node N, double distance) {
-		if(N instanceof Hotel) {
+		if(N instanceof Hotel ) {
 			return true;
 		}else{
 			for(Node Nhotel : Snodes) {
 
 				if(this.hotels.contains(Nhotel)) {
-					if( this.instance.getDistances()[Nhotel.getId()][N.getId()] < distance )
+					if( this.instance.getDistances()[N.getId()] [Nhotel.getId()]<= distance )
 						return true;
 				}
 			}
@@ -206,7 +200,7 @@ public class Solution {
 		ArrayList<Node> reachableSites = new ArrayList<>();
 
 		for(Node Place: Snodes){
-			if( Place != N && this.instance.getDistances()[Place.getId()][N.getId()] < distance){
+			if( Place != N && this.instance.getDistances()[N.getId()][Place.getId()]<= distance){
 				reachableSites.add(Place);
 			}
 		}
@@ -264,6 +258,7 @@ public class Solution {
 	public void checkSolution(){
 		boolean check = true;
 		for(Route route : routes) {
+			System.out.println("Checking route " + route.getRouteId());
 			if(!checkRoute(route)) {
 				System.out.println("Route " + route.getRouteId() + " is not valid");
 				check = false;
@@ -276,6 +271,10 @@ public class Solution {
 		if(!check) {
 			System.out.println("Some routes are not valid");
 			return;
+		}
+		if(!checkNodeInMultipleRoutes()) {
+			System.out.println("Some nodes are in multiple routes");
+			check = false;
 		}
 		System.out.println("All routes are valid");
 
@@ -351,6 +350,25 @@ public class Solution {
 		}
 
 		return check;
+	}
+
+	public boolean checkNodeInMultipleRoutes() {
+		Map<Integer, Integer> nodeCount = new HashMap<>();
+
+		for (Route route : routes) {
+			for (Node node : route.getSites()) {
+				nodeCount.put(node.getId(), nodeCount.getOrDefault(node.getId(), 0) + 1);
+			}
+		}
+
+		for (Map.Entry<Integer, Integer> entry : nodeCount.entrySet()) {
+			if (entry.getValue() > 1) {
+				System.out.println("Node " + entry.getKey() + " is in multiple routes");
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

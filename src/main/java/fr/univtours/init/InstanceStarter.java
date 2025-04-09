@@ -34,6 +34,7 @@ public class InstanceStarter {
             method.solve(instance);
             i++;
             System.out.println("Done");
+
         }
     }
 
