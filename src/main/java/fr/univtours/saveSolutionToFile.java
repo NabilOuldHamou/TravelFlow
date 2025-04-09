@@ -8,6 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
 public class saveSolutionToFile {
 
     public saveSolutionToFile(String filename, List<Route> routes, long elapsedTime) {
