@@ -7,9 +7,12 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class saveSolutionToFile {
+
     public saveSolutionToFile(String filename, List<Route> routes) {
+        filename = "Resultat/" + filename;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             // Écrire la valeur de la solution (score total)
             int totalScore = routes.stream().mapToInt(Route::getScore).sum();
@@ -29,5 +32,6 @@ public class saveSolutionToFile {
             e.printStackTrace();
         }
     }
+
 
 }

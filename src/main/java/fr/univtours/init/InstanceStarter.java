@@ -32,6 +32,7 @@ public class InstanceStarter {
         for (Instance instance : this.instances) {
             System.out.println("Solving instance " + i + " / " + this.instances.size());
             method.solve(instance);
+            method.saveResults(i);
             i++;
             System.out.println("Done");
 
