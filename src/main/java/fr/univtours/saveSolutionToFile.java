@@ -15,7 +15,7 @@ public class saveSolutionToFile {
         filename = "Resultat/" + filename;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             // Écrire la valeur de la solution (score total)
-            int totalScore = routes.stream().mapToInt(Route::getScore).sum();
+            double totalScore = routes.stream().mapToDouble(Route::getScore).sum();
             writer.write(String.valueOf(totalScore));
             writer.newLine();
 
