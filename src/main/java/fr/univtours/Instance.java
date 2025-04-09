@@ -118,25 +118,54 @@ public class Instance {
         }
     }
 
-    public Hotel getClosestHotel(Node from) {
+    public Hotel getClosestHotel(int from) {
         return Arrays.stream(nodes)
                 .filter(node -> node instanceof Hotel)
                 .map(node -> (Hotel) node)
-                .min(Comparator.comparingDouble(hotel -> getDistanceBetween(from, hotel)))
+                .min(Comparator.comparingDouble(hotel -> distances[from][hotel.getId()]))
                 .orElse(null);
     }
 
-    public Site getClosestSite(Node from) {
+    public Site getClosestSite(int from) {
         return Arrays.stream(nodes)
                 .filter(node -> node instanceof Site)
                 .map(node -> (Site) node)
-                .min(Comparator.comparingDouble(site -> getDistanceBetween(from, site)))
+                .min(Comparator.comparingDouble(site -> distances[from][site.getId()]))
                 .orElse(null);
     }
 
+    public List<Site> getAllSites() {
+        return Arrays.stream(nodes)
+                .filter(n -> n instanceof Site)
+                .map(Site.class::cast)
+                .toList();
+    }
+
+    public List<Hotel> getAllHotels() {
+        return Arrays.stream(nodes)
+                .filter(n -> n instanceof Hotel)
+                .map(Hotel.class::cast)
+                .toList();
+    }
+
+    public double getDistanceBetween(List<Integer> nodeIds) {
+        double totalDistance = 0.d;
+        for (int i = 0; i < nodeIds.size() - 1; i++) {
+            int start = nodeIds.get(i);
+            int end = nodeIds.get(i + 1);
+
+            totalDistance += distances[start][end];
+        }
+
+        return totalDistance;
+    }
 
     public double getDistanceBetween(Node nodeA, Node nodeB) {
         return distances[nodeA.getId()][nodeB.getId()];
+    }
+
+    public double getDistanceBetween(int nodeA, int nodeB) {
+        return distances[nodeA][nodeB];
     }
 
     @Override

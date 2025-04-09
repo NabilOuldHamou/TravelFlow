@@ -51,24 +51,8 @@ public class GreedySolution {
             routes.add(dailyRoute);
         }
 
-        double sum = routes.stream().mapToDouble(Route::getScore).sum();
-        return new SolutionResult(routes, sum);
+        return new SolutionResult(routes, getTotalScore(routes));
     }
-
-
-    public void recalculateParcouru(Route route) {
-        double total = 0;
-        Node current = route.getFirstNode();
-
-        for (Site s : route.getSites()) {
-            total += instance.getDistanceBetween(current, s);
-            current = s;
-        }
-
-        total += instance.getDistanceBetween(current, route.getLastNode());
-        route.setParcouru(total);
-    }
-
 
     public double getTotalScore(List<Route> routes) {
         return routes.stream().mapToDouble(Route::getScore).sum();

@@ -2,7 +2,6 @@ package fr.univtours.init.strategies;
 
 import fr.univtours.Instance;
 import fr.univtours.models.Route;
-import fr.univtours.models.solutions.GreedySolution;
 import fr.univtours.models.solutions.MultiSolutionGenerator;
 import fr.univtours.models.solutions.SolutionResult;
 import fr.univtours.models.solutions.metaheuristics.GeneticAlgorithm;
@@ -12,9 +11,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
-public class GreedyStrategy implements MethodStrategy {
+public class MSGGeneticStrategy implements MethodStrategy {
 
     @Override
     public void saveResults(long elapsedTime, String filename, SolutionResult result) {
@@ -49,12 +47,19 @@ public class GreedyStrategy implements MethodStrategy {
     @Override
     public SolutionResult solve(Instance instance) {
         try {
-            GreedySolution gs = new GreedySolution(instance);
-            return gs.solve();
+            MultiSolutionGenerator msg = new MultiSolutionGenerator(instance, 150);
+            var sr = msg.generateSolutions();
+
+            GeneticAlgorithm ga = new GeneticAlgorithm(sr, instance, 150, 5000, 0.1f, new Pair<>(0.3f, 0.7f), 0.2f);
+            var routes =  ga.train();
+
+            return new SolutionResult(routes, routes.stream().mapToDouble(Route::getScore).sum());
+
         } catch(Exception e) {
             e.printStackTrace();
         }
 
         return null;
     }
+
 }

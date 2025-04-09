@@ -3,6 +3,7 @@ package fr.univtours.init;
 import fr.univtours.Instance;
 import fr.univtours.init.strategies.GreedyStrategy;
 import fr.univtours.init.strategies.KPGRStrategy;
+import fr.univtours.init.strategies.MSGGeneticStrategy;
 import fr.univtours.init.strategies.MethodStrategy;
 import fr.univtours.models.solutions.SolutionResult;
 import fr.univtours.utils.Pair;
@@ -34,6 +35,8 @@ public class InstanceStarter {
             case "greedy":
                 this.method = new GreedyStrategy();
                 break;
+            case "genetic":
+                this.method = new MSGGeneticStrategy();
         }
     }
 
