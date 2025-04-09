@@ -6,16 +6,15 @@ import fr.univtours.models.Site;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class saveSolutionToFile {
 
-    public saveSolutionToFile(String filename, List<Route> routes) {
+    public saveSolutionToFile(String filename, List<Route> routes, long elapsedTime) {
         filename = "Resultat/" + filename;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             // Écrire la valeur de la solution (score total)
-            double totalScore = routes.stream().mapToDouble(Route::getScore).sum();
+            int totalScore =(int) routes.stream().mapToDouble(Route::getScore).sum();
             writer.write(String.valueOf(totalScore));
             writer.newLine();
 
@@ -28,6 +27,8 @@ public class saveSolutionToFile {
                 writer.write(route.getLastNode().getId() + "");
                 writer.newLine();
             }
+            // Écrire le temps d'exécution
+            writer.write("Execution time: " + elapsedTime + " ms");
         } catch (IOException e) {
             e.printStackTrace();
         }

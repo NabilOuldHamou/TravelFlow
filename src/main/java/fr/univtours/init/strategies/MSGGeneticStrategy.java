@@ -8,18 +8,13 @@ import fr.univtours.models.solutions.metaheuristics.GeneticAlgorithm;
 import fr.univtours.saveSolutionToFile;
 import fr.univtours.utils.Pair;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 public class MSGGeneticStrategy implements MethodStrategy {
 
     @Override
     public void saveResults(long elapsedTime, String filename, SolutionResult result) {
 
         char fn = filename.split("\\.")[0].charAt(filename.split("\\.")[0].length() - 1);
-        new saveSolutionToFile("Instance" + fn + ".sol", result.routes());
+        new saveSolutionToFile("Instance" + fn + ".sol", result.routes(), elapsedTime);
     }
 
     @Override
