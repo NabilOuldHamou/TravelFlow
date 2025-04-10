@@ -10,8 +10,14 @@ public class GreedyStrategy implements MethodStrategy {
     @Override
     public void saveResults(long elapsedTime, String filename, SolutionResult result) {
 
-        char fn = filename.split("\\.")[0].charAt(filename.split("\\.")[0].length() - 1);
-        new saveSolutionToFile("Instance" + fn + ".sol", result.routes(), elapsedTime);
+        String[] parts = filename.split("\\.");
+        String baseName = parts[0];
+        String instanceNumber = baseName.replaceAll("\\D+", "");
+
+        String outputFilename = "Instance" + instanceNumber + ".sol";
+
+        new saveSolutionToFile(outputFilename, result.routes(), elapsedTime);
+
     }
 
     @Override
